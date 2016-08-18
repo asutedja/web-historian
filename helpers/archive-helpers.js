@@ -12,7 +12,7 @@ var _ = require('underscore');
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
-  list: path.join(__dirname, '../archives/sites.txt')
+  list: path.join(__dirname, './archives/sites.txt')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -22,20 +22,51 @@ exports.initialize = function(pathsObj) {
   });
 };
 
+//When a url is added to list, worker will go find that site in list
+//Once done, the worker will archive that url;
+
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
+  var result;
+  fs.readFile(exports.paths.list, function(error, data) {
+    result = data + '';
+    var arr = result.split('\n');
+    callback(arr);
+  });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(target, callback) {
+  
+  exports.readListOfUrls(function(urls) {
+    var arr = urls.filter(function(url) {
+      return url === target;
+    });
+    if (arr.length > 0) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(target, callback) {
+  fs.appendFile(exports.paths.list, target + '\n', function() {
+    callback();
+  });
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(target, callback) {
+  var exist = true;
+  fs.access(exports.paths.archivedSites + '/' + target, (err) => {
+    exist = err ? false : true;
+    callback(exist);
+  });
+
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(array) {
+  
 };

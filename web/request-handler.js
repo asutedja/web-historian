@@ -58,28 +58,25 @@ exports.handleRequest = function (req, res) {
         res.end();
       }
     });
+  } else if (req.method === 'POST') {
+    var str;
+    req.on('data', function(chunk) {
+      var fixture = chunk + '';
+      str = fixture.slice(4);
+    });
+
+    req.on('end', function() {
+      fs.appendFile(archive.paths.list, str + '\n', function() {
+        res.writeHead(302, headers.headers);
+        res.end();
+      });
+    });
+
+  }
 
 
-        //console.log('---------------', fixture);
-    //var fixture;
-    //console.log('outside of on');
-    // req.on('data', function(chunk) {
-    //   fixture = chunk + '';
-    // });
-    // req.on('end', function() {
-    //   //console.log('---------------', fixture);
-    //   if (fixture === '/web/public/index.html') {
-    //     fixture = './web/public/index.html';
-    //     helpers.getResponse(fixture);
-    //   } else 
-    //   }
-      
-    //});
-    //helpers.getResponse(archive.paths.archivedSites + '/' + fixture);
-  }  
 };
     
-          
 
 
     
