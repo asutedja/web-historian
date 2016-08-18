@@ -4,10 +4,14 @@ var worker = require('../workers/htmlfetcher.js');
 var headers = require('./http-helpers.js');
 var fs = require('fs');
 var url = require('url');
+var cron = require('node-cron');
+
 // require more modules/folders here!
 
-
-setInterval(worker.workerAction, 15000); 
+cron.schedule('1 * * * * *', function() {
+  worker.workerAction();
+});
+//setInterval(worker.workerAction, 15000); 
 
 
 exports.handleRequest = function (req, res) {
