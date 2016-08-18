@@ -68,5 +68,15 @@ exports.isUrlArchived = function(target, callback) {
 };
 
 exports.downloadUrls = function(array) {
-  
+  array.forEach(function (url) {
+    var create = fs.createWriteStream(exports.paths.archivedSites + '/' + url);
+    create.end();
+
+    // fs.writeFile(exports.paths.archivedSites, url, function() {
+    //   console.log('new file written! :', url);
+    //   exports.isUrlArchived(url, function(exist) {
+    //     console.log('does it exist?', exist);
+    //   });
+    // });
+  });
 };
