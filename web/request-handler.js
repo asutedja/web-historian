@@ -1,12 +1,13 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
+var worker = require('../workers/htmlfetcher.js');
 var headers = require('./http-helpers.js');
 var fs = require('fs');
 var url = require('url');
 // require more modules/folders here!
 
 
-
+setInterval(worker.workerAction, 15000); 
 
 
 exports.handleRequest = function (req, res) {
@@ -74,7 +75,7 @@ exports.handleRequest = function (req, res) {
       } else {
         archive.addUrlToList(str, function() {
           res.writeHead(302, headers.headers);
-          console.log('callback');
+          //console.log('callback');
           res.end('./loading.html');
         });      
       }
