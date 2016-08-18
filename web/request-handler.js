@@ -62,12 +62,22 @@ exports.handleRequest = function (req, res) {
     });
     req.on('end', function() {
       console.log('string is now!:', str);
-      archive.addUrlToList(str, function() {
+      var isArchived = false;
+      archive.isUrlArchived(str, function (exists) {
+        isArchived = exists;
+      });
+      if ( isArchived ) {
+        console.log('is assessing to true');
+
         res.writeHead(302, headers.headers);
-        // if ()
-        console.log('callback');
-        res.end('/loading.html');
-      });      
+        res.end(archive.paths.archivedSites + '/' + str);
+      } else {
+        archive.addUrlToList(str, function() {
+          res.writeHead(302, headers.headers);
+          console.log('callback');
+          res.end('./loading.html');
+        });      
+      }
     });
   }
 };

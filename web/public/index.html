@@ -26,8 +26,8 @@
           console.log('data posted', data);
         },
         error: function(data) {
-          var url = data.responseText;
-          console.log('where are we gonna send em', url);
+          var redirectUrl = data.responseText;
+          location.href = redirectUrl;
         }
       });
     });
