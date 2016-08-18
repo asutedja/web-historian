@@ -37,68 +37,39 @@ exports.handleRequest = function (req, res) {
   if (req.method === 'GET') {
 
     var pathDestination = req.url;
-    //console.log('PATH DESTINATION', pathDestination);
+
     var exist = false;
     fs.access(archive.paths.archivedSites + '/' + pathDestination, (err) => {
       exist = err ? false : true;
-      //console.log(exist);
       if (pathDestination === '/') {
         fixture = './web/public/index.html';
         helpers.getResponse(200, fixture);
       } else if (exist) {
-        // var file = path.join(archive.paths.archivedSites, fixture);
-        // console.log('fileName', file);
-        // fs.writeFile(file, 'hi');
-        // fixtures[fixture] = true; 
-        // helpers.getResponse(fixture);
         helpers.getResponse(200, archive.paths.archivedSites + '/' + pathDestination);
       } else if (exist === false) {
-        //console.log('fails');
         res.writeHead(404, headers.headers);
         res.end();
       }
     });
   } else if (req.method === 'POST') {
+    // console.log(req.data);
     var str;
     req.on('data', function(chunk) {
+
       var fixture = chunk + '';
+      console.log('chunk is', fixture);
       str = fixture.slice(4);
     });
-
     req.on('end', function() {
-      fs.appendFile(archive.paths.list, str + '\n', function() {
+      console.log('string is now!:', str);
+      archive.addUrlToList(str, function() {
         res.writeHead(302, headers.headers);
+        console.log('callback');
         res.end();
-      });
+      });      
     });
-
   }
-
-
 };
-    
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-  
-
-
-
 
   //res.end('/<input/');
 

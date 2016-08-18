@@ -2,11 +2,37 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
 </head>
 <body>
   Enter a URL here:
-  <form method="POST">
-    <input type="input" name="url"></input>
+  <form id="url-submit" method="POST" type="submit" >
+    <input id="text" type="input" name="url"></input>
   </form>
+
+  <script>
+  
+
+  $(function() {
+    $('#url-submit').submit(function (e) {
+      e.preventDefault();
+      var urlSubmitted = $('#text').val();
+      $.ajax({
+        url: 'http://127.0.0.1:8080',
+        method: 'POST',
+        datatype: 'html/text',
+        data: {url: urlSubmitted},
+        success: function(data) {
+          console.log('data posted', data);
+        },
+        error: function(e) {
+          console.log(e);
+        }
+      });
+    });
+  });
+
+
+  </script>
 </body>
 </html>

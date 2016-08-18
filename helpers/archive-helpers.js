@@ -12,7 +12,7 @@ var _ = require('underscore');
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
-  list: path.join(__dirname, './archives/sites.txt')
+  list: path.join(__dirname, '../archives/sites.txt')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -53,8 +53,10 @@ exports.isUrlInList = function(target, callback) {
 };
 
 exports.addUrlToList = function(target, callback) {
+  console.log(target);
   fs.appendFile(exports.paths.list, target + '\n', function() {
     callback();
+    console.log('where we are writing (supposedly)', exports.paths.list);
   });
 };
 
