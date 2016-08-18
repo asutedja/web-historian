@@ -1,12 +1,12 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var $ = require('jQuery');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
  * if you move any files, you'll only need to change your code in one place! Feel free to
- * customize it in any way you wish.
+ * customize it in any way you wish. 
  */
 
 exports.paths = {
@@ -14,7 +14,7 @@ exports.paths = {
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
-
+ 
 // Used for stubbing paths for tests, do not modify
 exports.initialize = function(pathsObj) {
   _.each(pathsObj, function(path, type) {
@@ -73,6 +73,18 @@ exports.downloadUrls = function(array) {
   array.forEach(function (url) {
     var create = fs.createWriteStream(exports.paths.archivedSites + '/' + url);
     create.end();
+    $.ajax({
+      url: url,
+      datatype: 'html/text',
+      method: 'GET',
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(data) {
+        console.log('error: ', data);
+      }
+    });
+
 
     // fs.writeFile(exports.paths.archivedSites, url, function() {
     //   console.log('new file written! :', url);

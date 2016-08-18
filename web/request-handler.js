@@ -8,11 +8,11 @@ var cron = require('node-cron');
 
 // require more modules/folders here!
 
-cron.schedule('1 * * * * *', function() {
+cron.schedule('15 * * * * * *', function() {
   worker.workerAction();
 });
 //setInterval(worker.workerAction, 15000); 
-
+ 
 
 exports.handleRequest = function (req, res) {
   
@@ -34,10 +34,6 @@ exports.handleRequest = function (req, res) {
       }
     }
   };
-
-
-
-
 
   if (req.method === 'GET') {
 
