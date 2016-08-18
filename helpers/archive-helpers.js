@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var $ = require('jQuery');
+var http = require('http');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -48,7 +48,7 @@ exports.isUrlInList = function(target, callback) {
     } else {
       callback(false);
     }
-  });
+  }); 
 
 };
 
@@ -62,28 +62,42 @@ exports.addUrlToList = function(target, callback) {
 
 exports.isUrlArchived = function(target, callback) {
   var exist = true;
-  fs.access(exports.paths.archivedSites + '/' + target, (err) => {
+  fs.access(exports.paths.archivedSites + '/' + target + '.html', (err) => {
     exist = err ? false : true;
+    console.log(exist, err);
     callback(exist);
   });
 
 };
 
 exports.downloadUrls = function(array) {
+
   array.forEach(function (url) {
-    var create = fs.createWriteStream(exports.paths.archivedSites + '/' + url);
+    var create = fs.createWriteStream(exports.paths.archivedSites + '/' + url + '.html');
     create.end();
-    $.ajax({
-      url: url,
-      datatype: 'html/text',
-      method: 'GET',
-      success: function(data) {
-        console.log(data);
-      },
-      error: function(data) {
-        console.log('error: ', data);
-      }
+    console.log('before get request');
+    http.get({
+      host: url,
+      port: 80,
+      path: '/index.html'  
+    }, function(response) {
+      console.log('inside request');
+      var str = '';
+      response.on('data', function (chunk) {
+        console.log('chunk is now', chunk);
+        str += chunk + '';
+        console.log('that which well print', str);
+      });
+
+  //the whole response has been recieved, so we just print it out here
+      response.on('end', function () {
+        console.log('url is', url);
+        fs.appendFile(exports.paths.archivedSites + '/' + url + '.html', str, function(error, data) {
+          console.log('we wrote something maybe', error, data);
+        });
+      });
     });
+  });
 
 
     // fs.writeFile(exports.paths.archivedSites, url, function() {
@@ -92,5 +106,5 @@ exports.downloadUrls = function(array) {
     //     console.log('does it exist?', exist);
     //   });
     // });
-  });
+  
 };

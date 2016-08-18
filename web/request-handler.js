@@ -53,32 +53,32 @@ exports.handleRequest = function (req, res) {
       }
     });
   } else if (req.method === 'POST') {
-    // console.log(req.data);
     var str;
     req.on('data', function(chunk) {
 
       var fixture = chunk + '';
-      console.log('chunk is', fixture);
       str = fixture.slice(4);
     });
     req.on('end', function() {
-      console.log('string is now!:', str);
+      console.log(str);
       var isArchived = false;
       archive.isUrlArchived(str, function (exists) {
         isArchived = exists;
-      });
-      if ( isArchived ) {
-        console.log('is assessing to true');
+        console.log('exists?', exists);
+        if ( isArchived ) {
+          console.log('is assessing to true');
 
-        res.writeHead(302, headers.headers);
-        res.end(archive.paths.archivedSites + '/' + str);
-      } else {
-        archive.addUrlToList(str, function() {
           res.writeHead(302, headers.headers);
-          //console.log('callback');
-          res.end('./loading.html');
-        });      
-      }
+          res.end(archive.paths.archivedSites + '/' + str + '.html');
+        } else {
+          archive.addUrlToList(str, function() {
+            res.writeHead(302, headers.headers);
+            //console.log('callback');
+            res.end('./loading.html');
+          });      
+        }
+      });
+      
     });
   }
 };
