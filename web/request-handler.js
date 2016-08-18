@@ -64,8 +64,9 @@ exports.handleRequest = function (req, res) {
       console.log('string is now!:', str);
       archive.addUrlToList(str, function() {
         res.writeHead(302, headers.headers);
+        // if ()
         console.log('callback');
-        res.end();
+        res.end('/loading.html');
       });      
     });
   }

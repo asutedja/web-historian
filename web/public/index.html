@@ -25,8 +25,9 @@
         success: function(data) {
           console.log('data posted', data);
         },
-        error: function(e) {
-          console.log(e);
+        error: function(data) {
+          var url = data.responseText;
+          console.log('where are we gonna send em', url);
         }
       });
     });
