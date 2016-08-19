@@ -1,12 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="styles.css" />
+<link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
 </head>
 <body>
-  <form method="POST">
-    <input type="input" name="url"></input>
-  </form>
+  <div class="container">
+    <h3>Enter another while you wait: </h3>
+    <form method="POST" id='url-submit' type="submit">
+      <input id="text" type="input" name="url"></input>
+    </form>
   Our robots are currently archiving the site you requested. Please check back soon for a freshly embalmed copy!
+  </div>
+  <script>
+  
+
+  $(function() {
+    $('#url-submit').submit(function (e) {
+      e.preventDefault();
+      var urlSubmitted = $('#text').val();
+      $.ajax({
+        url: 'http://127.0.0.1:8080',
+        method: 'POST',
+        datatype: 'html/text',
+        data: {url: urlSubmitted},
+        success: function(data) {
+          console.log('data posted', data);
+        },
+        error: function(data) {
+          var redirectUrl = data.responseText;
+          location.href = redirectUrl;
+        }
+      });
+    });
+  });
+
+
+  </script>
+
+
 </body>
 </html>
